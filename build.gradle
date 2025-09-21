@@ -14,26 +14,32 @@ base {
 def javafxPath = System.getenv('JAVAFX_HOME') ?: '/usr/share/openjfx'
 
 repositories {
-    // 优先使用官方仓库
     mavenCentral()
+    
+    // 添加Fabric Kotlin专用仓库（关键修复）
+    maven {
+        name = "Fabric Kotlin"
+        url = "https://maven.fabricmc.net/net/fabricmc/fabric-language-kotlin/"
+    }
+    
+    // 保留Fabric官方仓库
     maven {
         name = "Fabric"
         url = "https://maven.fabricmc.net/"
     }
-    maven {
-        name = "Mojang"
-        url = "https://libraries.minecraft.net/"
-    }
     
-    // 备用镜像源（替换原fastmcmirror，使用更稳定的阿里云）
+    // 阿里云镜像（作为备用）
     maven {
         url = "https://maven.aliyun.com/repository/public"
     }
     maven {
         url = "https://maven.aliyun.com/repository/central"
     }
+    
+    // Minecraft官方仓库
     maven {
-        url = "https://maven.aliyun.com/repository/google"
+        name = "Mojang"
+        url = "https://libraries.minecraft.net/"
     }
 }
 
