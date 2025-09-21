@@ -10,9 +10,6 @@ base {
     archivesName = project.archives_base_name
 }
 
-// 移除直接配置Loom内部API的代码，避免版本不兼容问题
-// 改为通过仓库配置来引导依赖下载
-
 repositories {
     // 主要Fabric仓库
     maven {
@@ -35,12 +32,12 @@ repositories {
     mavenCentral()
 }
 
-// 配置资源下载URL
-tasks.withType(net.fabricmc.loom.task.DownloadAssetsTask).configureEach {
+// 配置资源下载URL（使用正确的类引用方式）
+tasks.withType("net.fabricmc.loom.task.DownloadAssetsTask").configureEach {
     url.set(uri("${loom_resources_base}"))
 }
 
-tasks.withType(net.fabricmc.loom.task.DownloadVersionManifestTask).configureEach {
+tasks.withType("net.fabricmc.loom.task.DownloadVersionManifestTask").configureEach {
     url.set(uri("${loom_version_manifests}"))
 }
 
