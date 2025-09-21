@@ -28,7 +28,7 @@ jobs:
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
-        run: ./gradlew build
+        run: ./gradlew clean build
         env:
             GRADLE_OPTS: "-Xmx2G -XX:MaxMetaspaceSize=512m"
       - name: capture build artifacts
