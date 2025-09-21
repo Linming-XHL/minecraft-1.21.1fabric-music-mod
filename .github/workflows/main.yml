@@ -29,6 +29,8 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
+        env:
+            GRADLE_OPTS: "-Xmx2G -XX:MaxMetaspaceSize=512m"
       - name: capture build artifacts
         uses: actions/upload-artifact@v4
         with:
