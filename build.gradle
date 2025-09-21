@@ -10,23 +10,20 @@ base {
     archivesName = project.archives_base_name
 }
 
-// 配置Loom使用指定的源（Loom 1.11.8兼容版本，使用afterEvaluate确保配置顺序正确）
-afterEvaluate {
-    loom {
-        minecraftProvider {
-            librariesBaseUrl.set(uri("${loom_libraries_base}"))
-            resourcesBaseUrl.set(uri("${loom_resources_base}"))
-            versionManifestUrl.set(uri("${loom_version_manifests}"))
-            experimentalVersionsUrl.set(uri("${loom_experimental_versions}"))
-        }
-    }
-}
+// 移除直接配置Loom内部API的代码，避免版本不兼容问题
+// 改为通过仓库配置来引导依赖下载
 
 repositories {
-    // 使用指定的Fabric仓库代理
+    // 主要Fabric仓库
     maven {
-        name = "Custom Fabric Repository"
+        name = "Fabric"
         url = uri("${loom_fabric_repository}")
+    }
+    
+    // Minecraft库和资源
+    maven {
+        name = "Minecraft Libraries"
+        url = uri("${loom_libraries_base}")
     }
     
     // 阿里云镜像作为补充
@@ -36,6 +33,15 @@ repositories {
     }
     
     mavenCentral()
+}
+
+// 配置资源下载URL
+tasks.withType(net.fabricmc.loom.task.DownloadAssetsTask).configureEach {
+    url.set(uri("${loom_resources_base}"))
+}
+
+tasks.withType(net.fabricmc.loom.task.DownloadVersionManifestTask).configureEach {
+    url.set(uri("${loom_version_manifests}"))
 }
 
 dependencies {
