@@ -27,7 +27,7 @@ dependencies {
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     
-    // 命令API
+    // 命令API (使用兼容版本)
     modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:${fabric_command_version}"
     
     // 压缩文件处理
