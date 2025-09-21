@@ -95,6 +95,10 @@ dependencies {
     implementation "org.openjfx:javafx-media:11.0.2:${javafxPlatform}"
     implementation "org.openjfx:javafx-graphics:11.0.2:${javafxPlatform}"
     implementation "org.openjfx:javafx-fxml:11.0.2:${javafxPlatform}"
+    
+    // 添加Kotlin语言支持（解决适配器冲突）
+    modImplementation "net.fabricmc:fabric-language-kotlin:1.10.11+kotlin.1.9.22"
+    include "net.fabricmc:fabric-language-kotlin:1.10.11+kotlin.1.9.22"
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -129,7 +133,14 @@ jar {
     }
     
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { 
+            it.isDirectory() ? it : zipTree(it).matching {
+                // 排除冲突的加载器类
+                exclude 'net/fabricmc/loader/**'
+                exclude 'net/fabricmc/api/**'
+                exclude 'META-INF/services/net.fabricmc.loader.api.LanguageAdapter'
+            }
+        }
     }
     
     // 启用ZIP64支持
@@ -170,4 +181,3 @@ loom {
         }
     }
 }
-    
