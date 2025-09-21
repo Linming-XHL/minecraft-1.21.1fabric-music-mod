@@ -14,53 +14,26 @@ base {
 def javafxPath = System.getenv('JAVAFX_HOME') ?: '/usr/share/openjfx'
 
 repositories {
+    // 优先使用官方仓库
     mavenCentral()
+    maven {
+        name = "Fabric"
+        url = "https://maven.fabricmc.net/"
+    }
+    maven {
+        name = "Mojang"
+        url = "https://libraries.minecraft.net/"
+    }
+    
+    // 备用镜像源（替换原fastmcmirror，使用更稳定的阿里云）
     maven {
         url = "https://maven.aliyun.com/repository/public"
     }
-    
-    // 配置Minecraft相关镜像源
     maven {
-        name = "MojangLauncherMetaMirror"
-        url = "https://launchermeta.fastmcmirror.org"
-        metadataSources {
-            artifact()
-        }
+        url = "https://maven.aliyun.com/repository/central"
     }
     maven {
-        name = "MojangLauncherMirror"
-        url = "https://launcher.fastmcmirror.org"
-        metadataSources {
-            artifact()
-        }
-    }
-    maven {
-        name = "MinecraftResourcesMirror"
-        url = "https://resources.fastmcmirror.org"
-        metadataSources {
-            artifact()
-        }
-    }
-    maven {
-        name = "MojangLibrariesMirror"
-        url = "https://libraries.fastmcmirror.org"
-        metadataSources {
-            artifact()
-        }
-    }
-    maven {
-        name = "FabricMetaMirror"
-        url = "https://fabricmeta.fastmcmirror.org"
-        metadataSources {
-            artifact()
-        }
-    }
-    maven {
-        name = "FabricMavenMirror"
-        url = "https://fabric.fastmcmirror.org"
-        metadataSources {
-            artifact()
-        }
+        url = "https://maven.aliyun.com/repository/google"
     }
 }
 
@@ -96,7 +69,7 @@ dependencies {
     implementation "org.openjfx:javafx-graphics:11.0.2:${javafxPlatform}"
     implementation "org.openjfx:javafx-fxml:11.0.2:${javafxPlatform}"
     
-    // 添加Kotlin语言支持（解决适配器冲突）
+    // 添加Kotlin语言支持（与当前Fabric版本兼容）
     modImplementation "net.fabricmc:fabric-language-kotlin:1.10.11+kotlin.1.9.22"
     include "net.fabricmc:fabric-language-kotlin:1.10.11+kotlin.1.9.22"
 }
@@ -135,7 +108,7 @@ jar {
     from {
         configurations.runtimeClasspath.collect { 
             it.isDirectory() ? it : zipTree(it).matching {
-                // 排除冲突的加载器类
+                // 排除冲突的加载器类，解决ClassCastException
                 exclude 'net/fabricmc/loader/**'
                 exclude 'net/fabricmc/api/**'
                 exclude 'META-INF/services/net.fabricmc.loader.api.LanguageAdapter'
@@ -143,10 +116,7 @@ jar {
         }
     }
     
-    // 启用ZIP64支持
     zip64 = true
-    
-    // 处理重复文件
     duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
     exclude 'module-info.class'
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
