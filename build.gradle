@@ -10,10 +10,10 @@ base {
     archivesName = project.archives_base_name
 }
 
-// 配置Loom使用指定的源（适用于Loom 1.11+版本）
+// 配置Loom使用指定的源（Loom 1.11.8兼容版本）
 loom {
-    minecraft {
-        // 设置Minecraft库和资源的基础URL
+    // 配置Minecraft相关URL
+    minecraftProvider {
         librariesBaseUrl.set(uri("${loom_libraries_base}"))
         resourcesBaseUrl.set(uri("${loom_resources_base}"))
         versionManifestUrl.set(uri("${loom_version_manifests}"))
