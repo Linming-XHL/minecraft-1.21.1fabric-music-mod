@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "musicmod",
+  "version": "${version}",
+  "name": "临明小狐狸音乐Mod",
+  "description": "一个可以在游戏中播放网络音乐的Mod",
+  "authors": [
+    "临明小狐狸"
+  ],
+  "contact": {
+    "homepage": "https://lmxhl.top"
+  },
+  "license": "MIT",
+  "icon": "assets/musicmod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "top.lmxhl.musicmod.MusicMod"
+    ]
+  },
+  "mixins": [
+    "musicmod.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
+    

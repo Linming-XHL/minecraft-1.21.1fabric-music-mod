@@ -1,0 +1,79 @@
+plugins {
+    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    // 官方Maven仓库
+    mavenCentral()
+}
+
+dependencies {
+    // Minecraft依赖
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    
+    // Fabric API
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    
+    // 命令API
+    modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:${fabric_command_version}"
+    
+    // 压缩文件处理
+    implementation 'org.apache.commons:commons-compress:1.26.0'
+    
+    // HTTP客户端
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3'
+    
+    // JSON处理
+    implementation 'com.google.code.gson:gson:2.10.1'
+    
+    // 日志框架
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+}
+
+processResources {
+    inputs.property "version", project.version
+    
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from(components.java)
+        }
+    }
+    repositories {
+        maven {
+            url = uri("file://${project.buildDir}/maven")
+        }
+    }
+}
+    
