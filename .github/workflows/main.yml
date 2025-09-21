@@ -1,11 +1,4 @@
-# Automatically build the project and run any configured tests for every push
-# and submitted pull request. This can help catch issues that only occur on
-# certain platforms or Java versions, and provides a first line of defence
-# against bad commits.
-
-name: build
-on: [pull_request, push]
-
+# .github/workflows/main.yml
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -19,6 +12,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'microsoft'
+      - name: 安装JavaFX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjfx
+      - name: 设置JAVAFX_HOME环境变量
+        run: echo "JAVAFX_HOME=/usr/share/openjfx" >> $GITHUB_ENV
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
