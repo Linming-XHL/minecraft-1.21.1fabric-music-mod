@@ -115,6 +115,7 @@ jar {
     zip64 = true
     duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
     exclude 'module-info.class'
+    exclude 'oshi.properties', 'oshi.architecture.properties'
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
 }
 
