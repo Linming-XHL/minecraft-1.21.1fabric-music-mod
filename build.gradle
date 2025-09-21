@@ -11,10 +11,19 @@ base {
 }
 
 repositories {
+    // 只保留Fabric官方仓库和Maven中央仓库
     mavenCentral()
+    
+    // Fabric官方仓库 - 这是Fabric API和相关依赖的主要来源
     maven {
         name = "Fabric"
         url = "https://maven.fabricmc.net/"
+    }
+    
+    // Minecraft官方资源仓库
+    maven {
+        name = "Minecraft Libraries"
+        url = "https://libraries.minecraft.net/"
     }
 }
 
