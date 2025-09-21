@@ -10,36 +10,32 @@ base {
     archivesName = project.archives_base_name
 }
 
+// 配置Loom使用指定的源
+loom {
+    // 设置Loom使用的基础库源
+    librariesBase = uri("${loom_libraries_base}")
+    // 设置资源文件源
+    resourcesBase = uri("${loom_resources_base}")
+    // 设置版本清单源
+    versionManifests = uri("${loom_version_manifests}")
+    // 设置实验性版本源
+    experimentalVersions = uri("${loom_experimental_versions}")
+}
+
 repositories {
-    // 阿里云Maven中央仓库镜像
+    // 使用指定的Fabric仓库代理
     maven {
-        name = "Aliyun Maven Central"
-        url = "https://maven.aliyun.com/repository/central"
+        name = "Custom Fabric Repository"
+        url = uri("${loom_fabric_repository}")
     }
     
-    // 阿里云谷歌仓库镜像（包含部分Fabric依赖）
-    maven {
-        name = "Aliyun Google"
-        url = "https://maven.aliyun.com/repository/google"
-    }
-    
-    // 阿里云公共仓库
+    // 阿里云镜像作为补充
     maven {
         name = "Aliyun Public"
         url = "https://maven.aliyun.com/repository/public"
     }
     
-    // 阿里云Fabric仓库镜像（如果有的话）
-    maven {
-        name = "Aliyun Fabric"
-        url = "https://maven.aliyun.com/repository/fabric"
-    }
-    
-    // 保留Fabric官方仓库作为后备
-    maven {
-        name = "Fabric Official"
-        url = "https://maven.fabricmc.net/"
-    }
+    mavenCentral()
 }
 
 dependencies {
