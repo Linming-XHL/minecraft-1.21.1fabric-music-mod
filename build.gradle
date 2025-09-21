@@ -10,16 +10,15 @@ base {
     archivesName = project.archives_base_name
 }
 
-// 配置Loom使用指定的源
+// 配置Loom使用指定的源（适用于Loom 1.11+版本）
 loom {
-    // 设置Loom使用的基础库源
-    librariesBase = uri("${loom_libraries_base}")
-    // 设置资源文件源
-    resourcesBase = uri("${loom_resources_base}")
-    // 设置版本清单源
-    versionManifests = uri("${loom_version_manifests}")
-    // 设置实验性版本源
-    experimentalVersions = uri("${loom_experimental_versions}")
+    minecraft {
+        // 设置Minecraft库和资源的基础URL
+        librariesBaseUrl.set(uri("${loom_libraries_base}"))
+        resourcesBaseUrl.set(uri("${loom_resources_base}"))
+        versionManifestUrl.set(uri("${loom_version_manifests}"))
+        experimentalVersionsUrl.set(uri("${loom_experimental_versions}"))
+    }
 }
 
 repositories {
