@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
 }
 
@@ -11,8 +11,11 @@ base {
 }
 
 repositories {
-    // 官方Maven仓库
     mavenCentral()
+    maven {
+        name = "Fabric"
+        url = "https://maven.fabricmc.net/"
+    }
 }
 
 dependencies {
@@ -35,9 +38,6 @@ dependencies {
     
     // JSON处理
     implementation 'com.google.code.gson:gson:2.10.1'
-    
-    // 日志框架
-    implementation 'org.slf4j:slf4j-api:2.0.9'
 }
 
 processResources {
@@ -54,22 +54,19 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
     withSourcesJar()
+    withJavadocJar()
+    
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            from(components.java)
+            from components.java
         }
     }
+    
     repositories {
         maven {
             url = uri("file://${project.buildDir}/maven")
