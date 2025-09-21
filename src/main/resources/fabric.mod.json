@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "musicmod",
+  "version": "${version}",
+  "name": "服务器音乐播放模组",
+  "description": "允许服务器通过指令播放音乐给所有玩家",
+  "authors": [
+    "临明小狐狸"
+  ],
+  "contact": {
+    "homepage": "https://lmxhl.top"
+  },
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "top.lmxhl.MusicMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
+    

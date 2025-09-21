@@ -1,0 +1,173 @@
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+// 系统安装的JavaFX 11路径
+def javafxPath = System.getenv('JAVAFX_HOME') ?: '/usr/share/openjfx'
+
+repositories {
+    mavenCentral()
+    maven {
+        url = "https://maven.aliyun.com/repository/public"
+    }
+    
+    // 配置Minecraft相关镜像源
+    maven {
+        name = "MojangLauncherMetaMirror"
+        url = "https://launchermeta.fastmcmirror.org"
+        metadataSources {
+            artifact()
+        }
+    }
+    maven {
+        name = "MojangLauncherMirror"
+        url = "https://launcher.fastmcmirror.org"
+        metadataSources {
+            artifact()
+        }
+    }
+    maven {
+        name = "MinecraftResourcesMirror"
+        url = "https://resources.fastmcmirror.org"
+        metadataSources {
+            artifact()
+        }
+    }
+    maven {
+        name = "MojangLibrariesMirror"
+        url = "https://libraries.fastmcmirror.org"
+        metadataSources {
+            artifact()
+        }
+    }
+    maven {
+        name = "FabricMetaMirror"
+        url = "https://fabricmeta.fastmcmirror.org"
+        metadataSources {
+            artifact()
+        }
+    }
+    maven {
+        name = "FabricMavenMirror"
+        url = "https://fabric.fastmcmirror.org"
+        metadataSources {
+            artifact()
+        }
+    }
+}
+
+def os = System.getProperty('os.name').toLowerCase()
+def javafxPlatform = 'linux'
+if (os.contains('win')) {
+    javafxPlatform = 'win'
+} else if (os.contains('mac')) {
+    javafxPlatform = 'mac'
+}
+
+dependencies {
+    // Minecraft依赖
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    
+    // Fabric API
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    
+    // 网络请求库
+    modImplementation "com.squareup.okhttp3:okhttp:4.12.0"
+    include "com.squareup.okhttp3:okhttp:4.12.0"
+    
+    // JSON解析库
+    modImplementation "com.google.code.gson:gson:2.10.1"
+    include "com.google.code.gson:gson:2.10.1"
+    
+    // JavaFX依赖
+    implementation "org.openjfx:javafx-base:11.0.2:${javafxPlatform}"
+    implementation "org.openjfx:javafx-controls:11.0.2:${javafxPlatform}"
+    implementation "org.openjfx:javafx-media:11.0.2:${javafxPlatform}"
+    implementation "org.openjfx:javafx-graphics:11.0.2:${javafxPlatform}"
+    implementation "org.openjfx:javafx-fxml:11.0.2:${javafxPlatform}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.release = 21
+    
+    it.options.compilerArgs = [
+        '--module-path', "${javafxPath}/lib",
+        '--add-modules', 'javafx.media,javafx.base,javafx.graphics,javafx.controls,javafx.fxml'
+    ]
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mod_id", project.archives_base_name
+    inputs.property "maven_group", project.maven_group
+    inputs.property "archives_base_name", project.archives_base_name
+
+    filesMatching("fabric.mod.json") {
+        expand(
+            version: project.version,
+            mod_id: project.archives_base_name,
+            maven_group: project.maven_group,
+            archives_base_name: project.archives_base_name
+        )
+    }
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+    
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    
+    // 启用ZIP64支持
+    zip64 = true
+    
+    // 处理重复文件
+    duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+    exclude 'module-info.class'
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from(components.java)
+        }
+    }
+    repositories {
+        maven {
+            url = uri("file://${project.buildDir}/maven-repo")
+        }
+    }
+}
+
+loom {
+    runs {
+        client {
+            client()
+            configName "Client"
+            vmArg("--module-path=${javafxPath}/lib")
+            vmArg("--add-modules=javafx.media,javafx.base,javafx.graphics,javafx.controls,javafx.fxml")
+        }
+        server {
+            server()
+            configName "Server"
+            vmArg("--module-path=${javafxPath}/lib")
+            vmArg("--add-modules=javafx.media,javafx.base,javafx.graphics,javafx.controls,javafx.fxml")
+        }
+    }
+}
+    
