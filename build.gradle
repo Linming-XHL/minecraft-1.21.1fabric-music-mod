@@ -11,19 +11,34 @@ base {
 }
 
 repositories {
-    // 只保留Fabric官方仓库和Maven中央仓库
-    mavenCentral()
-    
-    // Fabric官方仓库 - 这是Fabric API和相关依赖的主要来源
+    // 阿里云Maven中央仓库镜像
     maven {
-        name = "Fabric"
-        url = "https://maven.fabricmc.net/"
+        name = "Aliyun Maven Central"
+        url = "https://maven.aliyun.com/repository/central"
     }
     
-    // Minecraft官方资源仓库
+    // 阿里云谷歌仓库镜像（包含部分Fabric依赖）
     maven {
-        name = "Minecraft Libraries"
-        url = "https://libraries.minecraft.net/"
+        name = "Aliyun Google"
+        url = "https://maven.aliyun.com/repository/google"
+    }
+    
+    // 阿里云公共仓库
+    maven {
+        name = "Aliyun Public"
+        url = "https://maven.aliyun.com/repository/public"
+    }
+    
+    // 阿里云Fabric仓库镜像（如果有的话）
+    maven {
+        name = "Aliyun Fabric"
+        url = "https://maven.aliyun.com/repository/fabric"
+    }
+    
+    // 保留Fabric官方仓库作为后备
+    maven {
+        name = "Fabric Official"
+        url = "https://maven.fabricmc.net/"
     }
 }
 
@@ -36,7 +51,7 @@ dependencies {
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     
-    // 命令API (使用兼容版本)
+    // 命令API（使用确认存在的版本）
     modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:${fabric_command_version}"
     
     // 压缩文件处理
