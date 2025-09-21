@@ -1,9 +1,0 @@
-{
-  "required": true,
-  "package": "top.lmxhl.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "mixins": [],
-  "client": [],
-  "server": []
-}
-    
