@@ -16,31 +16,24 @@ def javafxPath = System.getenv('JAVAFX_HOME') ?: '/usr/share/openjfx'
 repositories {
     mavenCentral()
     
-    // 添加Fabric Kotlin专用仓库（关键修复）
-    maven {
-        name = "Fabric Kotlin"
-        url = "https://maven.fabricmc.net/net/fabricmc/fabric-language-kotlin/"
-    }
-    
-    // 保留Fabric官方仓库
-    maven {
-        name = "Fabric"
-        url = "https://maven.fabricmc.net/"
-    }
-    
-    // 阿里云镜像（作为备用）
+    // 保留阿里云镜像（可选）
     maven {
         url = "https://maven.aliyun.com/repository/public"
     }
+    
+    // 添加Fabric官方仓库（关键）
     maven {
-        url = "https://maven.aliyun.com/repository/central"
+        name = "Fabric Maven"
+        url = "https://maven.fabricmc.net/"
     }
     
-    // Minecraft官方仓库
+    // 保留Minecraft官方仓库
     maven {
         name = "Mojang"
         url = "https://libraries.minecraft.net/"
     }
+    
+    // 删除所有fastmcmirror.org相关仓库配置
 }
 
 def os = System.getProperty('os.name').toLowerCase()
@@ -75,9 +68,6 @@ dependencies {
     implementation "org.openjfx:javafx-graphics:11.0.2:${javafxPlatform}"
     implementation "org.openjfx:javafx-fxml:11.0.2:${javafxPlatform}"
     
-    // 添加Kotlin语言支持（与当前Fabric版本兼容）
-    modImplementation "net.fabricmc:fabric-language-kotlin:1.10.11+kotlin.1.9.22"
-    include "net.fabricmc:fabric-language-kotlin:1.10.11+kotlin.1.9.22"
 }
 
 tasks.withType(JavaCompile).configureEach {
